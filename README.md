@@ -30,3 +30,7 @@ Format is DATE,URL.
 Want to get just URLS.
 Then take array of URLS and get domains only.
 Then take that array and map to object with {count}.
+
+## Related
+
+* [https://github.com/christiangenco/chrome-export-history](History csv export from Chrome extension)

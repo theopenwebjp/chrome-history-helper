@@ -17,6 +17,11 @@ const CSV_GET_COL = 1;
 
 class ChromeHistoryHelper{
 
+    /**
+     * @param {string} url
+     * @param {object} options
+     * @return {Promise}
+     */
     static getCsv(url, options={}){
         //Browser
         //return $.ajax(url)
@@ -53,6 +58,10 @@ class ChromeHistoryHelper{
         });
     }
 
+    /**
+     * @param {string} url
+     * @return {string}
+     */
     static urlToDomain(url){
         let uri;
         let domain = '';
@@ -66,6 +75,10 @@ class ChromeHistoryHelper{
         return domain;
     }
 
+    /**
+     * @param {*} data
+     * @param {string} fileName
+     */
     static download(data, fileName){
 
         //Node
@@ -78,6 +91,10 @@ class ChromeHistoryHelper{
         //return Utility.downloadData(data);
     }
 
+    /**
+     * @param {array} arr
+     * @return {object}
+     */
     static getArrayItemCounts(arr){
         console.log('getArrayItemCounts', arr);
         
@@ -104,6 +121,10 @@ class ChromeHistoryHelper{
         return counts;
     }
 
+    /**
+     * @param {object} counts
+     * @return {object}
+     */
     static groupObjectCounts(counts){
         const groups = {};
         for(let url in counts){
@@ -120,17 +141,29 @@ class ChromeHistoryHelper{
         return groups;
     }
 
+    /**
+     * @param {array} twoDimArr
+     * @return {array}
+     */
     static twoDimArrToUrls(twoDimArr){
         return twoDimArr.map((arr)=>{
             return arr[CSV_GET_COL];
         });
     }
 
+    /**
+     * @param {string} csvUrl
+     * @return {Promise}
+     */
     static downloadHistoryData(csvUrl){
         return ChromeHistoryHelper.getCsv(csvUrl, {removeHeaders: true})
         .then(getDownloadHandler('history-data'));
     }
 
+    /**
+     * @param {string} csvUrl
+     * @return {Promise}
+     */
     static downloadDomainsByViews(csvUrl){
         return ChromeHistoryHelper.getCsv(csvUrl, {removeHeaders: true})
         .then(ChromeHistoryHelper.twoDimArrToUrls)
@@ -149,6 +182,11 @@ class ChromeHistoryHelper{
     }
 }
 
+/**
+ * @param {string} name
+ * @param {string} format
+ * @return {function}
+ */
 function getDownloadHandler(name, format='.txt'){
     const date = getFormattedDate();
     const fileName = `${name}-${date}${format}`;
@@ -158,6 +196,9 @@ function getDownloadHandler(name, format='.txt'){
     };
 }
 
+/**
+ * @return {*}
+ */
 function getFormattedDate(){
     return moment().format('YYYY-MM-DD-hh-mm-ss');
 }
