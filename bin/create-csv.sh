@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 pwd
+mkdir -p ./results/
 
 sqlite3 ./results/History <<EOF
 .headers on

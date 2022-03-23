@@ -1,8 +1,11 @@
-const {Utility} = require('js-functions');
+const { Utility } = require('js-functions');
 const Uri = require('jsuri');
-const parse = require('csv-parse/lib/sync');
+const { parse } = require('csv-parse/sync');
 const $ = require('jquery');
-const moment = require('moment');
+// const moment = require('moment'); // Remove if date-fns is working.
+// const { format } = moment();
+const format = require('date-fns/format');
+// console.log({ format })
 /*
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 $.support.cors = true;
@@ -19,24 +22,26 @@ class ChromeHistoryHelper{
 
     /**
      * @param {string} url
-     * @param {object} options
-     * @return {Promise}
+     * @param {{ removeHeaders?: boolean }} [options]
      */
-    static getCsv(url, options={}){
-        //Browser
-        //return $.ajax(url)
-        //Node
+    static getCsv(url, options = {}){
+        // Browser
+        // return $.ajax(url)
+        // Node
+        /**
+         * @param {string} url
+         */
         const getUrlNode = (url)=>{
-            return new Promise((resolve, reject)=>{
+            return new Promise((resolve, reject) => {
                 /*
-                request(url, (error, response, body)=>{
+                request(url, (error, response, body) => {
                     console.log('error:', error); // Print the error if one occurred
                     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
                     console.log('body:', body); // Print the HTML for the Google homepage.
 
-                    if(error){
+                    if (error) {
                         return reject(error);
-                    }else{
+                    } else {
                         return resolve(body);
                     }
                 });
@@ -48,11 +53,14 @@ class ChromeHistoryHelper{
         }
         return getUrlNode(url)
         .then((data)=>{
+            /**
+             * @type {any}
+             */
             let csv = parse(data, {});
             if(options.removeHeaders){
                 csv.splice(0, 1);
             }
-            //console.log('getCsv', csv);
+            // console.log('getCsv', csv);
             
             return csv;
         });
@@ -65,10 +73,10 @@ class ChromeHistoryHelper{
     static urlToDomain(url){
         let uri;
         let domain = '';
-        try{
+        try {
             uri = new Uri(url);
             domain = uri.host();
-        }catch(err){
+        } catch(err) {
             console.error(url, err);
         }
 
@@ -80,38 +88,49 @@ class ChromeHistoryHelper{
      * @param {string} fileName
      */
     static download(data, fileName){
+        if (data && typeof data === 'object') {
+            data = JSON.stringify(data)
+        }
 
-        //Node
-        if(!fileName){
+        // Node
+        if (!fileName) {
             fileName = getFormattedDate() + '.txt';
-            //fileName = String(new Date().getTime()) + '.txt';
+            // fileName = String(new Date().getTime()) + '.txt';
         }
         fs.writeFileSync('./results/' + fileName, data, {encoding: 'utf-8'});
-        //Browser
-        //return Utility.downloadData(data);
+        // Browser
+        // return Utility.downloadData(data);
     }
 
     /**
-     * @param {array} arr
-     * @return {object}
+     * @param {any[]} arr
      */
-    static getArrayItemCounts(arr){
-        console.log('getArrayItemCounts', arr);
+    static getArrayItemCounts(arr) {
+        // console.log('getArrayItemCounts', arr);
         
-        //Sort as new array so easy to get counts as groups.
+        // Sort as new array so easy to get counts as groups.
         const newArr = arr.slice();
         newArr.sort();
 
+        /**
+         * @type {string|null}
+         */
         let curKey = null;
+        /**
+         * @type {Record<string, number>}
+         */
         const counts = {
             //
         };
 
-        newArr.forEach((item)=>{
+        newArr.forEach((item) => {
             curKey = item;
+            if (!curKey) {
+                return
+            }
 
-            //Initialize
-            if(counts[curKey] === undefined){
+            // Initialize
+            if (counts[curKey] === undefined) {
                 counts[curKey] = 0;
             }
 
@@ -122,16 +141,18 @@ class ChromeHistoryHelper{
     }
 
     /**
-     * @param {object} counts
-     * @return {object}
+     * @param {Record<string, number>} counts
      */
     static groupObjectCounts(counts){
+        /**
+         * @type {Record<string, string[]>}
+         */
         const groups = {};
-        for(let url in counts){
-            let count = counts[url];
+        for (let url in counts) {
+            let count = String(counts[url]);
 
             //Initialize
-            if(groups[count] === undefined){
+            if (groups[count] === undefined) {
                 groups[count] = [];
             }
 
@@ -142,8 +163,7 @@ class ChromeHistoryHelper{
     }
 
     /**
-     * @param {array} twoDimArr
-     * @return {array}
+     * @param {any[][]} twoDimArr
      */
     static twoDimArrToUrls(twoDimArr){
         return twoDimArr.map((arr)=>{
@@ -153,7 +173,6 @@ class ChromeHistoryHelper{
 
     /**
      * @param {string} csvUrl
-     * @return {Promise}
      */
     static downloadHistoryData(csvUrl){
         return ChromeHistoryHelper.getCsv(csvUrl, {removeHeaders: true})
@@ -162,7 +181,6 @@ class ChromeHistoryHelper{
 
     /**
      * @param {string} csvUrl
-     * @return {Promise}
      */
     static downloadDomainsByViews(csvUrl){
         return ChromeHistoryHelper.getCsv(csvUrl, {removeHeaders: true})
@@ -185,27 +203,26 @@ class ChromeHistoryHelper{
 /**
  * @param {string} name
  * @param {string} format
- * @return {function}
  */
-function getDownloadHandler(name, format='.txt'){
+function getDownloadHandler(name, format='.txt') {
     const date = getFormattedDate();
     const fileName = `${name}-${date}${format}`;
 
+    /**
+     * @param {any} data
+     */
     return (data)=>{
+        // console.log({ data })
         ChromeHistoryHelper.download(data, fileName);
     };
 }
 
-/**
- * @return {*}
- */
-function getFormattedDate(){
-    return moment().format('YYYY-MM-DD-hh-mm-ss');
+function getFormattedDate() {
+    // return format('YYYY-MM-DD-hh-mm-ss'); // moment
+    // @ts-ignore
+    return format(new Date(), 'yyyy-MM-dd-hh-mm-ss'); // date-fns
 }
 
-if(typeof window === 'object'){
-    window.ChromeHistoryHelper = ChromeHistoryHelper;
-}
-if(typeof module === 'object'){
+if (typeof module === 'object') {
     module.exports = ChromeHistoryHelper;
 }
