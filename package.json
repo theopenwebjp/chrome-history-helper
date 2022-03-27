@@ -1,5 +1,5 @@
 {
-  "name": "chrome-history-helper",
+  "name": "@theopenweb/chrome-history-helper",
   "version": "1.0.0",
   "description": "Chrome History Helper - Download browser domain data and view count",
   "main": "index.js",
@@ -11,7 +11,6 @@
     "download-history": "gulp history",
     "download-domain-views": "gulp domain-views"
   },
-  "author": "Damien Golding",
   "keywords": [
     "chrome",
     "history",
@@ -20,6 +19,19 @@
     "Chromium",
     "browser"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theopenwebjp/chrome-history-helper.git"
+  },
+  "author": "The Open Web <noreply@theopenweb.jp> (https://theopenweb.jp)",
+  "contributors": [
+    "Damien Golding <noreply@damiengolding.com> (https://damiengolding.com)"
+  ],
+  "homepage": "https://theopenweb.info",
+  "bugs": {
+    "url": "https://github.com/theopenwebjp/chrome-history-helper/issues"
+  },
+  "private": false,
   "license": "MIT",
   "dependencies": {
     "csv-parse": "^5.0.4",

@@ -14,6 +14,10 @@ CURRENTLY ONLY WINDOWS! PLEASE CONTACT FOR OTHER SUPPORT REQUESTS.
 
 ## Usage
 
+```bash
+npm install @theopenweb/chrome-history-helper
+```
+
 All results are generated in [./results/](./results/)  
 To do steps 1 & 2 use `npm run csv`.  
 To do steps 3 & 4 use `npm run download`.  
