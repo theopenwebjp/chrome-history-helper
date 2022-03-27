@@ -14,9 +14,9 @@ CURRENTLY ONLY WINDOWS! PLEASE CONTACT FOR OTHER SUPPORT REQUESTS.
 
 ## Usage
 
-All results are generated in ./results/
-To do steps 1 & 2 use `npm run csv`.
-To do steps 3 & 4 use `npm run download`.
+All results are generated in [./results/](./results/)  
+To do steps 1 & 2 use `npm run csv`.  
+To do steps 3 & 4 use `npm run download`.  
 
 1. Copy history file to other location(because may be in use by Chrome and always good to work from copy). Example using Git Bash.
 `npm run copy`
