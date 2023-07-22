@@ -11,6 +11,9 @@
     "download-history": "gulp history",
     "download-domain-views": "gulp domain-views"
   },
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "keywords": [
     "chrome",
     "history",
